@@ -31,7 +31,7 @@ function startGame() {
         let obstaclePos = obstacle.offsetLeft;
         let dinoPos = parseInt(window.getComputedStyle(dino).getPropertyValue("bottom"));
 
-        if (obstaclePos < 50 && obstaclePos > 0 && dinoPos < 50) {
+        if (obstaclePos < 80 && obstaclePos > 50 && dinoPos < 50) {
             gameOver();
         }
 
@@ -47,7 +47,7 @@ function startGame() {
             score++;
             scoreDisplay.textContent = score;
         }
-    }, 100);
+    }, 500);
 }
 
 // Game Over Function
