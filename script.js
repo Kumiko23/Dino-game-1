@@ -1,42 +1,69 @@
-body {
-    text-align: center;
-    font-family: Arial, sans-serif;
+const dino = document.getElementById("dino");
+const obstacle = document.getElementById("obstacle");
+const game = document.getElementById("game");
+const restartBtn = document.getElementById("restart-btn");
+
+let isGameOver = false;
+let gameInterval;
+
+// Detect screen tap to jump (for mobile)
+game.ontouchstart = jump;
+
+function jump() {
+    if (!dino.classList.contains("jump") && !isGameOver) {
+        dino.classList.add("jump");
+        setTimeout(() => dino.classList.remove("jump"), 500);
+    }
 }
 
-.game {
-    width: 600px;
-    height: 200px;
-    border: 2px solid black;
-    margin: auto;
-    position: relative;
-    overflow: hidden;
-    background-color: lightgray;
+// Add jump animation
+let style = document.createElement('style');
+style.innerHTML = `
+    .jump {
+        animation: jump 0.5s linear;
+    }
+
+    @keyframes jump {
+        0% { bottom: 0; }
+        50% { bottom: 100px; }
+        100% { bottom: 0; }
+    }
+`;
+document.head.appendChild(style);
+
+// Function to start game loop
+function startGame() {
+    isGameOver = false;
+    restartBtn.style.display = "none";
+    obstacle.style.left = "100%";
+
+    gameInterval = setInterval(() => {
+        let obstaclePos = obstacle.offsetLeft;
+        let dinoPos = parseInt(window.getComputedStyle(dino).getPropertyValue("bottom"));
+
+        if (obstaclePos < 50 && obstaclePos > 0 && dinoPos < 30) {
+            gameOver();
+        }
+
+        obstacle.style.left = (obstaclePos - 5) + "px";
+        if (obstaclePos < 0) {
+            obstacle.style.left = "100%";
+        }
+    }, 30);
 }
 
-#dino {
-    width: 50px;
-    height: 50px;
-    background-color: blue;
-    position: absolute;
-    bottom: 0;
+// Game Over Function
+function gameOver() {
+    clearInterval(gameInterval);
+    isGameOver = true;
+    alert("Game Over!");
+    restartBtn.style.display = "block";
 }
 
-#obstacle {
-    width: 30px;
-    height: 30px;
-    background-color: red;
-    position: absolute;
-    bottom: 0;
-    left: 100%;
+// Restart Game
+function restartGame() {
+    startGame();
 }
 
-#restart-btn {
-    display: none;
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 18px;
-    background-color: #ff4444;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
+// Start game when page loads
+startGame();
