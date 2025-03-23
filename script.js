@@ -2,11 +2,14 @@ const dino = document.getElementById("dino");
 const obstacle = document.getElementById("obstacle");
 const game = document.getElementById("game");
 const restartBtn = document.getElementById("restart-btn");
+const scoreDisplay = document.getElementById("score");
 
 let isGameOver = false;
+let score = 0;
 let gameInterval;
+let scoreInterval;
 
-// Detect screen tap to jump (for mobile)
+// Detect screen tap to jump
 game.ontouchstart = jump;
 
 function jump() {
@@ -16,32 +19,19 @@ function jump() {
     }
 }
 
-// Add jump animation
-let style = document.createElement('style');
-style.innerHTML = `
-    .jump {
-        animation: jump 0.5s linear;
-    }
-
-    @keyframes jump {
-        0% { bottom: 0; }
-        50% { bottom: 100px; }
-        100% { bottom: 0; }
-    }
-`;
-document.head.appendChild(style);
-
-// Function to start game loop
+// Function to start the game
 function startGame() {
     isGameOver = false;
     restartBtn.style.display = "none";
     obstacle.style.left = "100%";
+    score = 0;
+    scoreDisplay.textContent = score;
 
     gameInterval = setInterval(() => {
         let obstaclePos = obstacle.offsetLeft;
         let dinoPos = parseInt(window.getComputedStyle(dino).getPropertyValue("bottom"));
 
-        if (obstaclePos < 50 && obstaclePos > 0 && dinoPos < 30) {
+        if (obstaclePos < 50 && obstaclePos > 0 && dinoPos < 50) {
             gameOver();
         }
 
@@ -50,13 +40,22 @@ function startGame() {
             obstacle.style.left = "100%";
         }
     }, 30);
+
+    // Score increases over time
+    scoreInterval = setInterval(() => {
+        if (!isGameOver) {
+            score++;
+            scoreDisplay.textContent = score;
+        }
+    }, 100);
 }
 
 // Game Over Function
 function gameOver() {
     clearInterval(gameInterval);
+    clearInterval(scoreInterval);
     isGameOver = true;
-    alert("Game Over!");
+    alert("Game Over! Score: " + score);
     restartBtn.style.display = "block";
 }
 
