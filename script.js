@@ -1,46 +1,42 @@
-const dino = document.getElementById("dino");
-const obstacle = document.getElementById("obstacle");
-
-document.addEventListener("keydown", function(event) {
-    if (event.code === "Space") {
-        jump();
-    }
-});
-
-function jump() {
-    if (!dino.classList.contains("jump")) {
-        dino.classList.add("jump");
-        setTimeout(() => dino.classList.remove("jump"), 500);
-    }
+body {
+    text-align: center;
+    font-family: Arial, sans-serif;
 }
 
-// Add jump animation
-let style = document.createElement('style');
-style.innerHTML = `
-    .jump {
-        animation: jump 0.5s linear;
-    }
+.game {
+    width: 600px;
+    height: 200px;
+    border: 2px solid black;
+    margin: auto;
+    position: relative;
+    overflow: hidden;
+    background-color: lightgray;
+}
 
-    @keyframes jump {
-        0% { bottom: 0; }
-        50% { bottom: 100px; }
-        100% { bottom: 0; }
-    }
-`;
-document.head.appendChild(style);
+#dino {
+    width: 50px;
+    height: 50px;
+    background-color: blue;
+    position: absolute;
+    bottom: 0;
+}
 
-// Move obstacle
-setInterval(() => {
-    let obstaclePos = obstacle.offsetLeft;
-    let dinoPos = parseInt(window.getComputedStyle(dino).getPropertyValue("bottom"));
+#obstacle {
+    width: 30px;
+    height: 30px;
+    background-color: red;
+    position: absolute;
+    bottom: 0;
+    left: 100%;
+}
 
-    if (obstaclePos < 50 && obstaclePos > 0 && dinoPos < 30) {
-        alert("Game Over!");
-        location.reload();
-    }
-
-    obstacle.style.left = (obstaclePos - 5) + "px";
-    if (obstaclePos < 0) {
-        obstacle.style.left = "100%";
-    }
-}, 30);
+#restart-btn {
+    display: none;
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #ff4444;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
